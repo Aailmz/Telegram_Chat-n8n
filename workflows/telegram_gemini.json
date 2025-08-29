@@ -1,5 +1,5 @@
 {
-  "name": "telegram_gemini",
+  "name": "FriendChat_MirzaZubari",
   "nodes": [
     {
       "parameters": {
@@ -28,7 +28,9 @@
       "parameters": {
         "promptType": "define",
         "text": "={{ $json[\"message\"][\"text\"] }}\n",
-        "options": {}
+        "options": {
+          "systemMessage": "Kamu adalah seorang teman yang menyebalkan. \nJawab dengan singkat, santai. \nSuka menggoda, menyindir halus, tapi tetap kasih jawaban yang benar. \nGunakan bahasa sehari-hari, tidak kaku. \nJangan pakai emoji buat nambahin kesan menyebalkan.\nJangan jawab terlalu panjang, cukup 1 kalimat.\n"
+        }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2.2,
@@ -60,18 +62,101 @@
     },
     {
       "parameters": {
-        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "da6f1eee-9571-400c-9d99-00f823eef915",
+              "leftValue": "={{ $json.output }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "f4aaa058-409b-4896-8e5f-d2a87b133276",
+              "leftValue": "={{ $json.chat_id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "number",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        800,
+        0
+      ],
+      "id": "902295de-cf62-49f5-bf24-21e33a2e4617",
+      "name": "If",
+      "retryOnFail": true,
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={{ '{\\n \"output\": \"' + $json.output + '\",\\n \"chat_id\": ' + $(\"Telegram Trigger\").item.json.message.chat.id + '\\n}' }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        560,
+        0
+      ],
+      "id": "a4051816-82bc-458a-bd5d-29eda60d6ea2",
+      "name": "Set"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.chat_id }}",
+        "text": "=Lagi error bos.",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1008,
+        160
+      ],
+      "id": "2c1a642e-9ac6-4af1-9e06-c4ef686892d5",
+      "name": "Fallback Message",
+      "webhookId": "ab386e80-f36d-4372-ae07-bb1b86c47e06",
+      "credentials": {
+        "telegramApi": {
+          "id": "CMunDk3SNg0UdroA",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.chat_id }}",
         "text": "={{ $json.output }}",
         "additionalFields": {}
       },
       "type": "n8n-nodes-base.telegram",
       "typeVersion": 1.2,
       "position": [
-        560,
+        1008,
         0
       ],
       "id": "f27016d9-4475-4e0c-b12b-f7b4980e84a1",
-      "name": "Send a text message",
+      "name": "Send Message",
       "webhookId": "80c54361-cbcc-454a-b8b2-3e0d8d12298a",
       "credentials": {
         "telegramApi": {
@@ -109,7 +194,36 @@
       "main": [
         [
           {
-            "node": "Send a text message",
+            "node": "Set",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Send Message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Fallback Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set": {
+      "main": [
+        [
+          {
+            "node": "If",
             "type": "main",
             "index": 0
           }
@@ -121,7 +235,7 @@
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "890378be-0b2b-40c7-b6b9-db3635a3750b",
+  "versionId": "03a466b3-7707-4846-bdb9-ddc818b67e49",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "0c1cb57a7e973dcc09cf2b855807e4a17a0b0905937d4ed3fc4ed87497ee701c"
