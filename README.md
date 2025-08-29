@@ -8,4 +8,4 @@ Currently using Gemini 2.5 Flash AI Agent.
 ## Docs:
 Telegram Chat n8n workflow:
 
-<img width="949" height="452" alt="TelegramChat_N8N_Workflow" src="https://github.com/user-attachments/assets/1e8b0b61-480a-46e9-b20a-e16b20f11e1f" />
+<img width="1200" height="348" alt="TelegramChat_N8N_Workflow_updated" src="https://github.com/user-attachments/assets/5a2ef93e-ce83-41e1-9c69-ee01cae91fe1" />
